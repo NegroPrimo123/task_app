@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тестирование API создания задачи</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input, button {
+            padding: 8px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Создание новой задачи</h1>
+    <form id="taskForm">
+        <label for="user_id">ID пользователя:</label>
+        <input type="number" id="user_id" required>
+        
+        <label for="task">Текст задачи:</label>
+        <input type="text" id="task" required>
+        
+        <button type="submit">Создать задачу</button>
+    </form>
+    
+    <div id="result">Результат будет отображен здесь...</div>
+
+    <script>
+        document.getElementById('taskForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const user_id = document.getElementById('user_id').value;
+            const task = document.getElementById('task').value;
+            
+            try {
+                const response = await fetch('http://localhost:3000/task/createTask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id, task }),
+                });
+                
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    `<strong>Успешно!</strong><br>Создана задача: ${JSON.stringify(data)}`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<strong>Ошибка:</strong> ${error.message}`;
+            }
+        });
+    </script>
+    <center><a href="./main.htm">Вернуться назад</a></center>
+</body>
+</html>
